@@ -72,6 +72,15 @@ public class EmployeeController {
     @PostMapping("/{code}/update")
     public String updateEmployee(@PathVariable("code") String code, @Validated Employee employee, BindingResult res, Model model) {
          // 入力チェック
+        if (employee.getPassword() != null && !employee.getPassword().isEmpty()) {
+            String pw = employee.getPassword();
+            if (pw.length() < 8 || pw.length() > 16) {
+                res.rejectValue("password", null, "パスワードは8~16文字で入力してください");
+            } else if (!pw.matches("^[a-zA-Z0-9]+$")) {
+                res.rejectValue("password", null, "パスワードは半角英数字で入力してください");
+            }
+        }
+
          if (res.hasErrors()) {
         return "employees/update";
     }
