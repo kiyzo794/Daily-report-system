@@ -17,10 +17,8 @@ public class TopController {
     @GetMapping(value = "/")
     public String top() {
         // 修正前は、従業員一覧画面に当たる「/employees」にリダイレクト
-        // return "redirect:/employees";
-        
-        // 修正後は、日報一覧画面に当たる「/reports」にリダイレクト
-        return "redirect:/reports";
+       return "redirect:/employees";
+
     }
 
 }
