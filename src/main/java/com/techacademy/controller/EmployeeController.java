@@ -141,7 +141,7 @@ public class EmployeeController {
     @PostMapping(value = "/{code}/delete")
     public String delete(@PathVariable("code") String code, @AuthenticationPrincipal UserDetail userDetail, Model model) {
 
-        ErrorKinds result = employeeService.delete(code, userDetail);
+        ErrorKinds result = employeeService.delete(code, userDetail, null);
 
         if (ErrorMessage.contains(result)) {
             model.addAttribute(ErrorMessage.getErrorName(result), ErrorMessage.getErrorValue(result));

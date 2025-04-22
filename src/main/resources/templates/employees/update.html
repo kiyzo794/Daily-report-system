@@ -32,7 +32,7 @@
                                         <label class="form-label" for="code">社員番号</label>
                                         <p class="mb-1"></p>
                                         <div class="col-md-7">
-                                            <input class="form-control" type="text" th:field="*{code}" th:errorclass="err" id="code">
+                                            <p class="form-control-plaintext" th:text="*{code}"></p>
                                             <span th:errors="*{code}" class="text-danger"></span>
                                         </div>
                                     </div>

@@ -6,11 +6,13 @@ import java.util.Optional;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import org.springframework.data.repository.CrudRepository;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.techacademy.constants.ErrorKinds;
 import com.techacademy.entity.Employee;
+import com.techacademy.entity.Reports;
 import com.techacademy.repository.EmployeeRepository;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -83,7 +85,7 @@ public class EmployeeService {
     }
     // 従業員削除
     @Transactional
-    public ErrorKinds delete(String code, UserDetail userDetail) {
+    public ErrorKinds delete(String code, UserDetail userDetail, CrudRepository<Employee, String> reportsService) {
 
         // 自分を削除しようとした場合はエラーメッセージを表示
         if (code.equals(userDetail.getEmployee().getCode())) {
@@ -94,6 +96,16 @@ public class EmployeeService {
         employee.setUpdatedAt(now);
         employee.setDeleteFlg(true);
         employeeRepository.save(employee); // DBへ保存
+        // 削除対象の従業員（employee）に紐づいている、日報のリスト（reportList）を取得
+        //List<Reports> reportList = reportsService.findByEmployee(employee);
+
+        // 日報のリスト（reportList）を拡張for文を使って繰り返し
+        //for (Reports report : reportList) {
+            // 日報（report）のIDを指定して、日報情報を削除
+         //   reportsService.delete(report.getId());
+        // }
+
+        /* 削除対象の従業員に紐づいている日報情報の削除：ここまで */
 
         return ErrorKinds.SUCCESS;
     }

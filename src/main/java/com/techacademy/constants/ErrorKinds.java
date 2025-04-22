@@ -10,6 +10,10 @@ public enum ErrorKinds {
     HALFSIZE_ERROR,
     // 桁数(8桁~16桁以外)チェックエラー
     RANGECHECK_ERROR,
+    // タイトル文字数(100文字以上)チェックエラー
+    TITLE_LENGTH_ERROR,
+    // 内容文字数(600文字以上)チェックエラー
+    CONTENT_LENGTH_ERROR,
     // 重複チェックエラー(例外あり)
     DUPLICATE_EXCEPTION_ERROR,
     // 重複チェックエラー(例外なし)
@@ -20,9 +24,11 @@ public enum ErrorKinds {
     DATECHECK_ERROR,
     // 更新チェックエラー
     NOT_FOUND_ERROR,
+    // アクセス権限エラー
+    ACCESS_DENIED_ERROR,
     // チェックOK
     CHECK_OK,
     // 正常終了
-    SUCCESS;
+    SUCCESS,
 
 }
