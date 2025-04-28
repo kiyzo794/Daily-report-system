@@ -26,7 +26,11 @@
                                          <label class="form-label" for="reportDate">日付</label>
                                          <div class="col-md-7">
                                               <input class="form-control" type="date" th:field="*{reportDate}" id="reportDate">
+                                              <!-- 日付重複エラー -->
                                               <span th:errors="*{reportDate}" class="text-danger"></span>
+                                                <div th:if="${reportDateError}" class="text-danger">
+                                                   <p th:text="${reportDateError}"></p>
+                                                </div>
                                               </div>
                                     </div>
 

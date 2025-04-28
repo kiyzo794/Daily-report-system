@@ -14,6 +14,8 @@ import com.techacademy.constants.ErrorKinds;
 import com.techacademy.entity.Employee;
 import com.techacademy.entity.Reports;
 import com.techacademy.repository.EmployeeRepository;
+import com.techacademy.repository.ReportsRepository;
+
 import org.springframework.transaction.annotation.Transactional;
 
 @Service
@@ -21,10 +23,14 @@ public class EmployeeService {
 
     private final EmployeeRepository employeeRepository;
     private final PasswordEncoder passwordEncoder;
+    private final ReportsRepository reportsRepository;
+    private final ReportsService reportsService;
 
-    public EmployeeService(EmployeeRepository employeeRepository, PasswordEncoder passwordEncoder) {
+    public EmployeeService(EmployeeRepository employeeRepository, PasswordEncoder passwordEncoder,ReportsRepository reportsRepository,ReportsService reportsService) {
         this.employeeRepository = employeeRepository;
         this.passwordEncoder = passwordEncoder;
+        this.reportsRepository = reportsRepository;
+        this. reportsService = reportsService;
     }
 
     // 従業員更新
@@ -85,7 +91,7 @@ public class EmployeeService {
     }
     // 従業員削除
     @Transactional
-    public ErrorKinds delete(String code, UserDetail userDetail, CrudRepository<Employee, String> reportsService) {
+    public ErrorKinds delete(String code, UserDetail userDetail) {
 
         // 自分を削除しようとした場合はエラーメッセージを表示
         if (code.equals(userDetail.getEmployee().getCode())) {
@@ -97,19 +103,17 @@ public class EmployeeService {
         employee.setDeleteFlg(true);
         employeeRepository.save(employee); // DBへ保存
         // 削除対象の従業員（employee）に紐づいている、日報のリスト（reportList）を取得
-        //List<Reports> reportList = reportsService.findByEmployee(employee);
+        List<Reports> reportList = reportsRepository.findByEmployee(employee);
 
         // 日報のリスト（reportList）を拡張for文を使って繰り返し
-        //for (Reports report : reportList) {
+        for (Reports report : reportList) {
             // 日報（report）のIDを指定して、日報情報を削除
-         //   reportsService.delete(report.getId());
+            reportsService.deleteReport(report.getId(),userDetail);
         // }
-
+       }
         /* 削除対象の従業員に紐づいている日報情報の削除：ここまで */
-
         return ErrorKinds.SUCCESS;
     }
-
     // 従業員一覧表示処理
     public List<Employee> findAll() {
         return employeeRepository.findAll();

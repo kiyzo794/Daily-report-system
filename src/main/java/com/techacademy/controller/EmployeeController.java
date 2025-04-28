@@ -129,8 +129,8 @@ public class EmployeeController {
             }
 
         } catch (DataIntegrityViolationException e) {
-            model.addAttribute(ErrorMessage.getErrorName(ErrorKinds.DUPLICATE_EXCEPTION_ERROR),
-                    ErrorMessage.getErrorValue(ErrorKinds.DUPLICATE_EXCEPTION_ERROR));
+            model.addAttribute(ErrorMessage.getErrorName(ErrorKinds.DUPLICATE_ERROR),
+                    ErrorMessage.getErrorValue(ErrorKinds.DUPLICATE_ERROR));
             return create(employee);
         }
 
@@ -141,7 +141,7 @@ public class EmployeeController {
     @PostMapping(value = "/{code}/delete")
     public String delete(@PathVariable("code") String code, @AuthenticationPrincipal UserDetail userDetail, Model model) {
 
-        ErrorKinds result = employeeService.delete(code, userDetail, null);
+        ErrorKinds result = employeeService.delete(code, userDetail);
 
         if (ErrorMessage.contains(result)) {
             model.addAttribute(ErrorMessage.getErrorName(result), ErrorMessage.getErrorValue(result));

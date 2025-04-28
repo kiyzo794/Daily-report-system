@@ -14,9 +14,7 @@ public enum ErrorKinds {
     TITLE_LENGTH_ERROR,
     // 内容文字数(600文字以上)チェックエラー
     CONTENT_LENGTH_ERROR,
-    // 重複チェックエラー(例外あり)
-    DUPLICATE_EXCEPTION_ERROR,
-    // 重複チェックエラー(例外なし)
+    // 重複チェックエラー
     DUPLICATE_ERROR,
     // ログイン中削除チェックエラー
     LOGINCHECK_ERROR,

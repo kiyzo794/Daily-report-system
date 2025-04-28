@@ -6,19 +6,22 @@ import java.util.Optional;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 
+import com.techacademy.entity.Employee;
 import com.techacademy.entity.Reports;
 
 public interface ReportsRepository extends JpaRepository<Reports, Integer> {
 
-    Optional<Reports> findById(int reportId);
+    Optional<Reports> findById(Integer reportId);
 
     List<Reports> findByEmployeeCode(String employeeCode);
+
+    List<Reports> findByEmployee(Employee employee);
 
     List<Reports> findByDeleteFlgFalse();
 
     List<Reports> findByEmployeeCodeAndDeleteFlgFalse(String employeeCode);
-
+ // 従業員コードと日付で重複チェック
     boolean existsByEmployeeCodeAndReportDate(String code, LocalDate reportDate);
-
-    boolean existsByEmployeeCodeAndReportDateAndIdNot(String code, LocalDate reportDate, int id);
+ // IDを除いて従業員コードと日付で重複チェック
+    boolean existsByEmployeeCodeAndReportDateAndIdNot(String code, LocalDate reportDate, Integer id);
 }

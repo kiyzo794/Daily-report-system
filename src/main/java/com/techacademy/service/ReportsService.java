@@ -1,8 +1,8 @@
 package com.techacademy.service;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Optional;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -31,8 +31,8 @@ public class ReportsService {
         }
     }
 
-    // 日報1件取得（詳細 or 更新フォーム用）
-    public Reports findById(int id) {
+    // 日報1件取得
+    public Reports findById(Integer id) {
         Reports report = reportsRepository.findById(id).orElse(null);
         if (report != null && report.getEmployee() != null) {
             // Lazyロード対策
@@ -41,7 +41,7 @@ public class ReportsService {
         return report;
     }
 
-    // 日報保存（新規作成）
+    // 日報保存
     @Transactional
     public ErrorKinds save(Reports report, UserDetail userDetail) {
 
@@ -49,14 +49,25 @@ public class ReportsService {
             return ErrorKinds.BLANK_ERROR;
         }
 
+        // 手動で文字数制限チェック（タイトル）
+        if (report.getTitle().length() > 100) {
+            return ErrorKinds.TITLE_LENGTH_ERROR;
+        }
+     // 手動で文字数制限チェック（内容）
+        if (report.getContent().length() > 600) {
+            return ErrorKinds.CONTENT_LENGTH_ERROR;
+        }
+
+
         // 同日・同社員の日報重複チェック
-        if (reportsRepository.existsByEmployeeCodeAndReportDate(userDetail.getEmployee().getCode(), report.getReportDate())) {
+        LocalDate reportDateOnly = report.getReportDate(); // 時間部分を無視する
+        if (reportsRepository.existsByEmployeeCodeAndReportDate(userDetail.getEmployee().getCode(), reportDateOnly)) {
             return ErrorKinds.DATECHECK_ERROR;
         }
 
         LocalDateTime now = LocalDateTime.now();
 
-        report.setEmployeeCode(userDetail.getEmployee().getCode());
+        report.setEmployee(userDetail.getEmployee());
         report.setDeleteFlg(false);
         report.setCreatedAt(now);
         report.setUpdatedAt(now);
@@ -74,12 +85,18 @@ public class ReportsService {
             return ErrorKinds.NOT_FOUND_ERROR;
         }
 
-        // 重複チェック（IDを除く）
-        if (reportsRepository.existsByEmployeeCodeAndReportDateAndIdNot(
-                userDetail.getEmployee().getCode(),
-                updatedReport.getReportDate(),
-                updatedReport.getId())) {
+        // 重複チェック
+        if (reportsRepository.existsByEmployeeCodeAndReportDateAndIdNot(userDetail.getEmployee().getCode(),updatedReport.getReportDate(),updatedReport.getId())) {
             return ErrorKinds.DATECHECK_ERROR;
+        }
+
+        // 手動で文字数制限チェック（タイトル）
+        if (updatedReport.getTitle().length() > 100) {
+            return ErrorKinds.TITLE_LENGTH_ERROR;
+        }
+        // 手動で文字数制限チェック（content）
+        if (updatedReport.getContent().length() > 600) {
+            return ErrorKinds.CONTENT_LENGTH_ERROR;
         }
 
         existingReport.setReportDate(updatedReport.getReportDate());
@@ -93,13 +110,13 @@ public class ReportsService {
 
     // 日報削除
     @Transactional
-    public ErrorKinds deleteReport(int reportId, UserDetail userDetail) {
+    public ErrorKinds deleteReport(Integer reportId, UserDetail userDetail) {
         Reports report = findById(reportId);
         if (report == null) {
             return ErrorKinds.NOT_FOUND_ERROR;
         }
 
-        if (!report.getEmployeeCode().equals(userDetail.getEmployee().getCode())
+        if (!report.getEmployee().getCode().equals(userDetail.getEmployee().getCode())
                 && userDetail.getEmployee().getRole() != Employee.Role.ADMIN) {
             return ErrorKinds.ACCESS_DENIED_ERROR;
         }

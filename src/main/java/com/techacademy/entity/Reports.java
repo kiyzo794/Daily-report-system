@@ -18,8 +18,7 @@ import jakarta.validation.constraints.NotNull;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
-
-import com.techacademy.entity.Employee;
+import jakarta.validation.constraints.NotBlank;
 
 import lombok.Data;
 
@@ -42,13 +41,13 @@ public class Reports {
 
     // タイトル
     @Column(length = 100, nullable = false)
-    @NotNull
+    @NotBlank(message = "値を入力してください")
     private String title;
 
     // 内容
     @Lob
     @Column(length = 600, nullable = false)
-    @NotNull
+    @NotBlank(message = "値を入力してください")
     private String content;
 
     //削除フラグ
@@ -63,8 +62,8 @@ public class Reports {
     @Column(name = "updated_at", nullable = false)
     private LocalDateTime updatedAt;
 
-    // 社員番号
-    @ManyToOne
+    // 社員情報
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "employee_code", referencedColumnName = "code", nullable = false)
     private Employee employee;
 
