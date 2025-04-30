@@ -35,9 +35,9 @@ public class Reports {
     private Integer id;
 
     // 日付
-    @Column(name = "report_date", nullable = false)
-    @NotNull
-    private LocalDate reportDate;
+     @Column(name = "report_date", nullable = false)
+     @NotNull
+     private LocalDate reportDate;
 
     // タイトル
     @Column(length = 100, nullable = false)
@@ -67,4 +67,4 @@ public class Reports {
     @JoinColumn(name = "employee_code", referencedColumnName = "code", nullable = false)
     private Employee employee;
 
-    }
+   }

@@ -1,5 +1,6 @@
 package com.techacademy.controller;
 
+import java.time.LocalDate;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
@@ -121,6 +122,8 @@ public class ReportsController {
 
         if (res.hasErrors()) {
             reports.setEmployee(userDetail.getEmployee());
+
+
             model.addAttribute("reports", reports);
             return "reports/update";
         }

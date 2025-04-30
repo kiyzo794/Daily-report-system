@@ -72,24 +72,22 @@ public class EmployeeController {
     @PostMapping("/{code}/update")
     public String updateEmployee(@PathVariable("code") String code, @Validated Employee employee, BindingResult res, Model model) {
          // 入力チェック
-        if (employee.getPassword() != null && !employee.getPassword().isEmpty()) {
-            String pw = employee.getPassword();
-            if (pw.length() < 8 || pw.length() > 16) {
-                res.rejectValue("password", null, "パスワードは8~16文字で入力してください");
-            } else if (!pw.matches("^[a-zA-Z0-9]+$")) {
-                res.rejectValue("password", null, "パスワードは半角英数字で入力してください");
-            }
-        }
-
-         if (res.hasErrors()) {
-        return "employees/update";
-    }
+        if (res.hasErrors()) {
+            model.addAttribute("employee",employee);
+       return "employees/update";
+   }
          // 更新処理(パスワードの有無によって内部で分岐）
          ErrorKinds result = employeeService.update(employee);
          // エラーがあった場合はエラーメッセージを表示して更新画面に戻す
          if (result != ErrorKinds.SUCCESS) {
              model.addAttribute("employee", employee);
-             model.addAttribute("updateError", ErrorMessage.getErrorValue(result));
+
+             String errorMessage = ErrorMessage.getErrorValue(result);
+             String errorName = ErrorMessage.getErrorName(result);
+
+             // メッセージを適切な場所に渡す
+             model.addAttribute(errorName, errorMessage);
+
              return "employees/update";
          }
          return "redirect:/employees";

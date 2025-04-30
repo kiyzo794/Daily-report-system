@@ -49,7 +49,7 @@
                                         <p class="mb-1"></p>
                                         <div class="col-md-7">
                                             <input class="form-control" type="password" th:field="*{password}" th:errorclass="err" id="password">
-                                            <span th:errors="*{password}" class="text-danger"></span>
+                                            <span th:if="${passwordError} != null" th:text="${passwordError}" class="text-danger"></span>
                                         </div>
                                     </div>
                                     <div class="mb-3">
@@ -63,12 +63,6 @@
                                             </select>
                                         </div>
                                     </div>
-                                    <div class="mb-3">
-                                     <label class="form-label">更新日時</label>
-                                      <div class="col-md-7">
-                                        <p th:text="${employee.updatedAt != null ? #temporals.format(employee.updatedAt, 'yyyy/MM/dd HH:mm') : '未更新'}"></p>
-                                         </div>
-                                     </div>
                                 </div>
                                 <p class="mt-5">
                                     <input type="submit" value="更新" class="btn btn-primary">
